@@ -167,11 +167,11 @@ body {
     right: 6px;
     top: 50%;
     transform: translateY(-50%);
-    opacity: 0;
+    opacity: 3;
 }
 
 .theme-toggle.active .fa-sun {
-    opacity: 0;
+    opacity: 3;
 }
 
 .theme-toggle.active .fa-moon {
@@ -442,7 +442,7 @@ section {
     width: 24px;
 }
 
-/* Projects Section */
+/* Projects Section - COMPLETE DARK MODE READY */
 .projects {
     background: var(--bg-primary);
 }
@@ -461,16 +461,62 @@ section {
     background: transparent;
     border-radius: 50px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-primary);
-    transition: var(--transition);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
 }
 
+/* Light Mode Active */
 .filter-btn:hover,
 .filter-btn.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
+    background: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* 🌙 DARK MODE BUTTONS - BLACK + YELLOW */
+[data-theme="dark"] .filter-btn {
+    border-color: #64748b;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .filter-btn:hover {
+    background: #1a1a1a !important;
+    color: #ffd700 !important;
+    border-color: #ffd700 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+}
+
+[data-theme="dark"] .filter-btn.active {
+    background: #000000 !important;
+    color: #ffd700 !important;
+    border-color: #ffd700 !important;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+}
+
+/* Button shine effect */
+.filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.filter-btn:hover::before {
+    left: 100%;
 }
 
 .projects-grid {
@@ -487,7 +533,11 @@ section {
     transition: var(--transition);
     opacity: 0;
     transform: translateY(50px);
-    border: 1px solid var(--text-accent);
+    border: 1px solid transparent;
+}
+
+[data-theme="dark"] .project-card {
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .project-card.animate {
@@ -496,7 +546,7 @@ section {
 }
 
 .project-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-15px);
     box-shadow: var(--shadow-lg);
 }
 
@@ -604,6 +654,220 @@ section {
 
 .project-links a:hover {
     transform: translateY(-2px);
+}
+
+/* 🚀 NAVIGATION LINKS - GLOWING ACTIVE STATE */
+.nav-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 8px 16px;
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+/* Light Mode Nav Active */
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary);
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* 🌙 Dark Mode Nav Active */
+[data-theme="dark"] .nav-link:hover,
+[data-theme="dark"] .nav-link.active {
+    color: #ffd700 !important;
+    background: rgba(255, 215, 0, 0.2) !important;
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4) !important;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* Nav underline animation */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), #ffd700);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 80%;
+}
+
+/* 🔥 PROJECT LINKS - Live Demo & GitHub */
+.link-demo,
+.link-github {
+    flex: 1;
+    padding: 12px 20px;
+    text-align: center;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    font-size: 0.9rem;
+    border: 2px solid transparent;
+}
+
+/* Live Demo Button */
+.link-demo {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: rgb(127, 238, 234) !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.link-demo:hover {
+    transform: translateY(-5px) scale(1.05) !important;
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.6) !important;
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary)) !important;
+}
+
+/* GitHub Button */
+.link-github {
+    background: #24292e;
+    color: white !important;
+    border: 2px solid #24292e;
+}
+
+.link-github:hover {
+    background: #161b22 !important;
+    transform: translateY(-5px) scale(1.05) !important;
+    box-shadow: 0 15px 35px rgba(36, 41, 46, 0.6) !important;
+    border-color: #58a6ff;
+}
+
+/* 🌙 DARK MODE PROJECT BUTTONS */
+[data-theme="dark"] .link-demo {
+    background: linear-gradient(135deg, #e5ff00, #ffed4a) !important;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+}
+
+[data-theme="dark"] .link-demo:hover {
+    box-shadow: 0 20px 40px rgba(255, 215, 0, 0.7) !important;
+    background: linear-gradient(135deg, #ffed4a, #ffd700) !important;
+}
+
+[data-theme="dark"] .link-github:hover {
+    border-color: #58a6ff;
+    box-shadow: 0 15px 35px rgba(88, 166, 255, 0.4);
+}
+
+/* ✨ SOCIAL LINKS - GitHub, LinkedIn, Facebook */
+.social-links a {
+    width: 60px;
+    height: 60px;
+    background: var(--bg-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.4rem;
+    box-shadow: var(--shadow);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    border: 3px solid transparent;
+}
+
+/* Social hover animations */
+.social-links a:hover {
+    transform: translateY(-8px) rotate(360deg) scale(1.1);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.5);
+    animation: socialPulse 0.6s ease-out;
+}
+
+/* Specific social colors */
+.social-links a[href*="github"]:hover {
+    background: #24292e !important;
+    color: #58a6ff !important;
+    box-shadow: 0 20px 40px rgba(36, 41, 46, 0.6);
+}
+
+.social-links a[href*="linkedin"]:hover {
+    background: #0077b5 !important;
+    color: white !important;
+    box-shadow: 0 20px 40px rgba(0, 119, 181, 0.6);
+}
+
+.social-links a[href*="facebook"]:hover {
+    background: #1877f2 !important;
+    color: white !important;
+    box-shadow: 0 20px 40px rgba(24, 119, 242, 0.6);
+}
+
+/* Pulse animation for social links */
+@keyframes socialPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 20px rgba(102, 126, 234, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+    }
+}
+
+/* 🌙 DARK MODE SOCIAL LINKS */
+[data-theme="dark"] .social-links a {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .social-links a:hover {
+    border-color: rgba(255, 215, 0, 0.5);
+    box-shadow: 0 20px 40px rgba(255, 215, 0, 0.4);
+}
+
+/* Button ripple effect */
+.btn,
+.link-demo,
+.link-github,
+.filter-btn,
+.social-links a {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before,
+.link-demo::before,
+.link-github::before,
+.filter-btn::before,
+.social-links a::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before,
+.link-demo:hover::before,
+.link-github:hover::before,
+.filter-btn:hover::before,
+.social-links a:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 /* Contact Section */
@@ -962,3 +1226,4 @@ section {
         color: var(--primary) !important;
         font-weight: 700;
     }
+}
