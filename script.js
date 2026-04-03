@@ -34,6 +34,75 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// 🎭 ENHANCED NAVIGATION SMOOTH SCROLL WITH ANIMATION
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href');
+        const targetSection = document.querySelector(targetId);
+        if (targetSection) {
+            const targetPosition = targetSection.offsetTop - 80;
+
+            // Add ripple effect
+            createRipple(e.currentTarget);
+
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+
+            // Active state
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            // Close mobile menu
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    });
+});
+
+// Ripple effect function
+function createRipple(element) {
+    const ripple = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    ripple.classList.add('ripple');
+
+    const rippleCSS = `
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    `;
+
+    if (!document.querySelector('#ripple-styles')) {
+        const style = document.createElement('style');
+        style.id = 'ripple-styles';
+        style.textContent = rippleCSS;
+        document.head.appendChild(style);
+    }
+
+    element.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+}
+
 // Mobile Navigation Toggle
 hamburger.addEventListener('click', () => {
     navMenu.classList.toggle('active');
