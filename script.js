@@ -40,26 +40,97 @@ themeToggle.addEventListener('click', () => {
 // Initialize theme on page load
 initTheme();
 // 🌙 DARK MODE - CLOUDFLARE WORKERS FIXED VERSION
-// 🌙 ULTRA-SIMPLE DARK MODE - CLOUDFLARE PROOF
 document.addEventListener('DOMContentLoaded', function () {
-    const html = document.documentElement;
-    const themeToggle = document.getElementById('theme-toggle');
+    // Check saved theme or default to light
+    const savedTheme = localStorage.getItem('theme') || 'light';
 
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme');
+    // Apply theme
     if (savedTheme === 'dark') {
-        html.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle?.classList.add('active');
     }
 
-    // Toggle theme
-    themeToggle.addEventListener('click', function () {
-        const isDark = html.getAttribute('data-theme') === 'dark';
+    // Theme toggle click handler
+    themeToggle?.addEventListener('click', function () {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         const newTheme = isDark ? 'light' : 'dark';
 
-        html.setAttribute('data-theme', newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
+
+        // Toggle active class for animation
+        themeToggle.classList.toggle('active');
     });
 });
+
+// 🎭 ENHANCED NAVIGATION SMOOTH SCROLL WITH ANIMATION
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href');
+        const targetSection = document.querySelector(targetId);
+        if (targetSection) {
+            const targetPosition = targetSection.offsetTop - 80;
+
+            // Add ripple effect
+            createRipple(e.currentTarget);
+
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+
+            // Active state
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            // Close mobile menu
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    });
+});
+
+// Ripple effect function
+function createRipple(element) {
+    const ripple = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    ripple.classList.add('ripple');
+
+    const rippleCSS = `
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    `;
+
+    if (!document.querySelector('#ripple-styles')) {
+        const style = document.createElement('style');
+        style.id = 'ripple-styles';
+        style.textContent = rippleCSS;
+        document.head.appendChild(style);
+    }
+
+    element.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+}
 
 // Mobile Navigation Toggle
 hamburger.addEventListener('click', () => {
