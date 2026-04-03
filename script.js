@@ -10,6 +10,7 @@ const filterBtns = document.querySelectorAll('.filter-btn');
 const projectCards = document.querySelectorAll('.project-card');
 const themeToggle = document.getElementById('theme-toggle');
 
+
 // Dark Mode Toggle Functionality - FIXED VERSION
 function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -38,6 +39,27 @@ themeToggle.addEventListener('click', () => {
 
 // Initialize theme on page load
 initTheme();
+// 🌙 DARK MODE - CLOUDFLARE WORKERS FIXED VERSION
+// 🌙 ULTRA-SIMPLE DARK MODE - CLOUDFLARE PROOF
+document.addEventListener('DOMContentLoaded', function () {
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('theme-toggle');
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        html.setAttribute('data-theme', 'dark');
+    }
+
+    // Toggle theme
+    themeToggle.addEventListener('click', function () {
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        const newTheme = isDark ? 'light' : 'dark';
+
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+});
 
 // Mobile Navigation Toggle
 hamburger.addEventListener('click', () => {
@@ -53,15 +75,23 @@ navLinks.forEach(link => {
     });
 });
 
-// Navbar background on scroll - FIXED
+
 window.addEventListener('scroll', () => {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
     if (window.scrollY > 50) {
         navbar.style.background = isDark ? 'rgba(15, 15, 35, 0.98)' : 'rgba(255, 255, 255, 0.98)';
+
         navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
     } else {
         navbar.style.background = isDark ? 'rgba(15, 15, 35, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+
+        navbar.style.backdropFilter = 'blur(20px)';
+        navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+    } else {
+        navbar.style.background = isDark ? 'rgba(15, 15, 35, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+        navbar.style.backdropFilter = 'blur(20px)';
+
         navbar.style.boxShadow = 'none';
     }
 
@@ -79,16 +109,15 @@ navLinks.forEach(link => {
         e.preventDefault();
         const targetId = link.getAttribute('href');
         const targetSection = document.querySelector(targetId);
-        const targetPosition = targetSection.offsetTop - 80;
-
-        window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-        });
-
-        // Set active nav link
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
+        if (targetSection) {
+            const targetPosition = targetSection.offsetTop - 80;
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+        }
     });
 });
 
@@ -127,10 +156,8 @@ function typeWriter() {
     }
 }
 
-// Project Filter Functionality
 filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        // Update active button
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
@@ -152,14 +179,13 @@ filterBtns.forEach(btn => {
     });
 });
 
-// Skill Bar Animation on Scroll
+// Skill Bar Animation
 const skillBars = document.querySelectorAll('.skill-progress');
 
 function animateSkillBars() {
     skillBars.forEach(bar => {
         const barPosition = bar.getBoundingClientRect().top;
         const windowHeight = window.innerHeight;
-
         if (barPosition < windowHeight - 100) {
             const width = bar.getAttribute('data-width');
             bar.style.width = width + '%';
@@ -167,87 +193,65 @@ function animateSkillBars() {
     });
 }
 
-// Intersection Observer for Scroll Animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
+// Intersection Observer
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('animate');
         }
     });
-}, observerOptions);
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-// Observe project cards and sections
 projectCards.forEach(card => observer.observe(card));
 document.querySelectorAll('section').forEach(section => observer.observe(section));
 
 // Contact Form Validation
 contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
-
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
     const message = document.getElementById('message').value.trim();
-
     let isValid = true;
 
-    // Reset previous errors
     document.querySelectorAll('.error').forEach(error => error.textContent = '');
 
-    // Name validation
     if (name.length < 2) {
         document.getElementById('name-error').textContent = 'Name must be at least 2 characters';
         isValid = false;
     }
-
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         document.getElementById('email-error').textContent = 'Please enter a valid email';
         isValid = false;
     }
-
-    // Message validation
     if (message.length < 10) {
         document.getElementById('message-error').textContent = 'Message must be at least 10 characters';
         isValid = false;
     }
 
     if (isValid) {
-        // Simulate form submission
         alert('Thank you for your message! I\'ll get back to you soon.');
         contactForm.reset();
     }
 });
 
-// Navbar active link on scroll
+// Navbar active link on scroll & skill bars
 window.addEventListener('scroll', () => {
     let current = '';
     const sections = document.querySelectorAll('section');
-
     sections.forEach(section => {
         const sectionTop = section.offsetTop - 100;
         if (window.scrollY >= sectionTop) {
             current = section.getAttribute('id');
         }
     });
-
     navLinks.forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href') === `#${current}`) {
             link.classList.add('active');
         }
     });
-});
-
-// Animate skill bars on scroll
-window.addEventListener('scroll', animateSkillBars);
-
-// Initialize everything when page loads
+    animateSkillBars();
 window.addEventListener('load', () => {
     typeWriter();
     animateSkillBars();
