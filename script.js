@@ -11,24 +11,26 @@ const projectCards = document.querySelectorAll('.project-card');
 const themeToggle = document.getElementById('theme-toggle');
 
 // 🌙 DARK MODE - CLOUDFLARE WORKERS FIXED VERSION
-// 🌙 ULTRA-SIMPLE DARK MODE - CLOUDFLARE PROOF
 document.addEventListener('DOMContentLoaded', function () {
-    const html = document.documentElement;
-    const themeToggle = document.getElementById('theme-toggle');
+    // Check saved theme or default to light
+    const savedTheme = localStorage.getItem('theme') || 'light';
 
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme');
+    // Apply theme
     if (savedTheme === 'dark') {
-        html.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle?.classList.add('active');
     }
 
-    // Toggle theme
-    themeToggle.addEventListener('click', function () {
-        const isDark = html.getAttribute('data-theme') === 'dark';
+    // Theme toggle click handler
+    themeToggle?.addEventListener('click', function () {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         const newTheme = isDark ? 'light' : 'dark';
 
-        html.setAttribute('data-theme', newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
+
+        // Toggle active class for animation
+        themeToggle.classList.toggle('active');
     });
 });
 
