@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jerome Quinto - Web Developer Portfolio</title>
+    <title>Jerome Quinto - Web Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,6 +17,15 @@
             <div class="nav-logo">
                 <h3>Jerome Quinto</h3>
             </div>
+            <!-- 🌙 SIMPLIFIED THEME TOGGLE -->
+            <div class="nav-right">
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-sun theme-icon"></i>
+                    <i class="fas fa-moon theme-icon"></i>
+                    <div class="toggle-ball"></div>
+                </div>
+            </div>
+            <!-- END THEME TOGGLE -->
             <ul class="nav-menu" id="nav-menu">
                 <li><a href="#home" class="nav-link">HOME</a></li>
                 <li><a href="#about" class="nav-link">ABOUT</a></li>
@@ -25,16 +34,10 @@
                 <li><a href="#contact" class="nav-link">CONTACT</a></li>
                 <li><a href="#resume" class="nav-link">RESUME</a></li>
             </ul>
-            <div class="nav-right">
-                <div class="theme-toggle" id="theme-toggle">
-                    <i class="fas fa-sun"></i>
-                    <div class="toggle-ball"></div>
-                </div>
-                <div class="hamburger" id="hamburger">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
             </div>
         </div>
     </nav>
@@ -62,7 +65,7 @@
     <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
-            <h2 class="section-heading">ABOUT ME</h2>
+            <h2 class="section-heading"><span class="gradient-text">About Me</span></h2>
             <div class="about-grid">
                 <div class="about-image">
                     <img src="portfolio.jpg" alt="Your Profile Picture" class="profile-img">
@@ -97,7 +100,7 @@
     <!-- Skills Section -->
     <section id="skills" class="skills">
         <div class="container">
-            <h2 class="section-heading">My Skills</h2>
+            <h2 class="section-heading"><span class="gradient-text">My Skills</span></h2>
             <div class="skills-container">
                 <div class="skills-category">
                     <h3>Technical Skills</h3>
@@ -184,7 +187,7 @@
     <!-- Projects Section -->
     <section id="projects" class="projects">
         <div class="container">
-            <h2 class="section-heading">Featured Projects</h2>
+            <h2 class="section-heading"> <span class="gradient-text">Featured Projects</span></h2>
             <div class="projects-filters">
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="html">HTML/CSS</button>
@@ -366,4 +369,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
