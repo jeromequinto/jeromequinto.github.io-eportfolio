@@ -10,6 +10,35 @@ const filterBtns = document.querySelectorAll('.filter-btn');
 const projectCards = document.querySelectorAll('.project-card');
 const themeToggle = document.getElementById('theme-toggle');
 
+
+// Dark Mode Toggle Functionality - FIXED VERSION
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.classList.add('active');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        themeToggle.classList.remove('active');
+    }
+}
+
+themeToggle.addEventListener('click', () => {
+    themeToggle.classList.toggle('active');
+    const isDark = themeToggle.classList.contains('active');
+
+    if (isDark) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+    }
+});
+
+// Initialize theme on page load
+initTheme();
 // 🌙 DARK MODE - CLOUDFLARE WORKERS FIXED VERSION
 document.addEventListener('DOMContentLoaded', function () {
     // Check saved theme or default to light
@@ -117,17 +146,23 @@ navLinks.forEach(link => {
     });
 });
 
-// Navbar background on scroll - FIXED FOR DARK MODE
+
 window.addEventListener('scroll', () => {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
     if (window.scrollY > 50) {
         navbar.style.background = isDark ? 'rgba(15, 15, 35, 0.98)' : 'rgba(255, 255, 255, 0.98)';
+
+        navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+    } else {
+        navbar.style.background = isDark ? 'rgba(15, 15, 35, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+
         navbar.style.backdropFilter = 'blur(20px)';
         navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
     } else {
         navbar.style.background = isDark ? 'rgba(15, 15, 35, 0.95)' : 'rgba(255, 255, 255, 0.95)';
         navbar.style.backdropFilter = 'blur(20px)';
+
         navbar.style.boxShadow = 'none';
     }
 
@@ -192,7 +227,6 @@ function typeWriter() {
     }
 }
 
-// FIXED PROJECT FILTER
 filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         filterBtns.forEach(b => b.classList.remove('active'));
@@ -289,9 +323,6 @@ window.addEventListener('scroll', () => {
         }
     });
     animateSkillBars();
-});
-
-// Initialize on load
 window.addEventListener('load', () => {
     typeWriter();
     animateSkillBars();
