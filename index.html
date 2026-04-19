@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="2JnDk8h2vAQ7-klAgAnliIYtST5uaNJvvSihVpPpNG4" />
     <title>Jerome Quinto - Web Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 
 <body>
@@ -18,15 +18,6 @@
             <div class="nav-logo">
                 <h3>Jerome Quinto</h3>
             </div>
-            <!-- 🌙 SIMPLIFIED THEME TOGGLE -->
-            <div class="nav-right">
-                <div class="theme-toggle" id="theme-toggle">
-                    <i class="fas fa-sun theme-icon"></i>
-                    <i class="fas fa-moon theme-icon"></i>
-                    <div class="toggle-ball"></div>
-                </div>
-            </div>
-            <!-- END THEME TOGGLE -->
             <ul class="nav-menu" id="nav-menu">
                 <li><a href="#home" class="nav-link">HOME</a></li>
                 <li><a href="#about" class="nav-link">ABOUT</a></li>
@@ -35,10 +26,17 @@
                 <li><a href="#contact" class="nav-link">CONTACT</a></li>
                 <li><a href="#resume" class="nav-link">RESUME</a></li>
             </ul>
-            <div class="hamburger" id="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <div class="nav-right">
+                <div class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-sun theme-icon"></i>
+                    <i class="fas fa-moon theme-icon"></i>
+                    <div class="toggle-ball"></div>
+                </div>
+                <div class="hamburger" id="hamburger" aria-label="Open menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
             </div>
         </div>
     </nav>
@@ -69,15 +67,13 @@
             <h2 class="section-heading"><span class="gradient-text">About Me</span></h2>
             <div class="about-grid">
                 <div class="about-image">
-                    <img src="portfolio.jpg" alt="Your Profile Picture" class="profile-img">
+                    <img src="portfolio.jpg" alt="Jerome Quinto" class="profile-img">
                 </div>
                 <div class="about-content">
                     <p>I'm a dedicated web developer with hands-on experience in creating responsive and interactive
                         websites. Currently honing my skills in HTML5, CSS3, and JavaScript through real-world
-                        projects.
-                    </p>
-                    <p>I love turning complex problems into simple, beautiful solutions. When I'm not coding, you
-                        can
+                        projects.</p>
+                    <p>I love turning complex problems into simple, beautiful solutions. When I'm not coding, you can
                         find me exploring new technologies or working on personal projects.</p>
                     <div class="about-stats">
                         <div class="stat-item">
@@ -107,8 +103,7 @@
                     <h3>Technical Skills</h3>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span>HTML5</span>
-                            <span class="skill-percent">95%</span>
+                            <span>HTML5</span><span class="skill-percent">95%</span>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-progress" data-width="95"></div>
@@ -116,8 +111,7 @@
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span>CSS3</span>
-                            <span class="skill-percent">80%</span>
+                            <span>CSS3</span><span class="skill-percent">80%</span>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-progress" data-width="80"></div>
@@ -125,28 +119,23 @@
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span>JavaScript</span>
-                            <span class="skill-percent">85%</span>
+                            <span>JavaScript</span><span class="skill-percent">85%</span>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-progress" data-width="85"></div>
                         </div>
                     </div>
-
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span>Java</span>
-                            <span class="skill-percent">80%</span>
+                            <span>Java</span><span class="skill-percent">80%</span>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-progress" data-width="80"></div>
                         </div>
                     </div>
-
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span>C#</span>
-                            <span class="skill-percent">85%</span>
+                            <span>C#</span><span class="skill-percent">85%</span>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-progress" data-width="85"></div>
@@ -154,8 +143,7 @@
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
-                            <span>Git/GitHub</span>
-                            <span class="skill-percent">80%</span>
+                            <span>Git/GitHub</span><span class="skill-percent">80%</span>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-progress" data-width="80"></div>
@@ -164,22 +152,10 @@
                 </div>
                 <div class="skills-category">
                     <h3>Soft Skills</h3>
-                    <div class="soft-skill">
-                        <i class="fas fa-users"></i>
-                        <span>Team Collaboration</span>
-                    </div>
-                    <div class="soft-skill">
-                        <i class="fas fa-lightbulb"></i>
-                        <span>Problem Solving</span>
-                    </div>
-                    <div class="soft-skill">
-                        <i class="fas fa-comments"></i>
-                        <span>Communication</span>
-                    </div>
-                    <div class="soft-skill">
-                        <i class="fas fa-clock"></i>
-                        <span>Time Management</span>
-                    </div>
+                    <div class="soft-skill"><i class="fas fa-users"></i><span>Team Collaboration</span></div>
+                    <div class="soft-skill"><i class="fas fa-lightbulb"></i><span>Problem Solving</span></div>
+                    <div class="soft-skill"><i class="fas fa-comments"></i><span>Communication</span></div>
+                    <div class="soft-skill"><i class="fas fa-clock"></i><span>Time Management</span></div>
                 </div>
             </div>
         </div>
@@ -188,55 +164,43 @@
     <!-- Projects Section -->
     <section id="projects" class="projects">
         <div class="container">
-            <h2 class="section-heading"> <span class="gradient-text">Featured Projects</span></h2>
+            <h2 class="section-heading"><span class="gradient-text">Featured Projects</span></h2>
             <div class="projects-filters">
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="html">HTML/CSS</button>
                 <button class="filter-btn" data-filter="js">JavaScript</button>
             </div>
             <div class="projects-grid">
-                <!-- Project 1: E-portfolio -->
                 <article class="project-card" data-category="html">
                     <div class="project-image">
                         <img src="portfolio.jpg" alt="E-portfolio Draft" loading="lazy">
                         <div class="project-overlay">
-                            <a href="#" class="project-link" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
+                            <a href="#" class="project-link" target="_blank"><i
+                                    class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                     <div class="project-content">
                         <h3>E-portfolio Draft</h3>
-                        <p>Personal portfolio showcasing web development skills with responsive design, animations,
-                            and
+                        <p>Personal portfolio showcasing web development skills with responsive design, animations, and
                             interactive JavaScript features.</p>
                         <div class="project-tags">
-                            <span>HTML5</span>
-                            <span>CSS3</span>
-                            <span>JavaScript</span>
-                            <span>Responsive</span>
+                            <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Responsive</span>
                         </div>
                         <div class="project-links">
-                            <a href="jerome-quinto-eportfolio.jeromequinto0101.workers.dev" target="_blank"
-                                class="link-demo">
-                                <i class="fas fa-eye"></i> Live Demo
-                            </a>
+                            <a href="https://jeromequinto.github.io/jeromequinto.github.io-eportfolio/"
+                                class="link-demo"><i class="fas fa-eye"></i> Live Demo</a>
                             <a href="https://github.com/jeromequinto/jeromequinto.github.io-eportfolio/tree/main"
-                                target="_blank" class="link-github">
-                                <i class="fab fa-github"></i> GitHub
-                            </a>
+                                target="_blank" class="link-github"><i class="fab fa-github"></i> GitHub</a>
                         </div>
                     </div>
                 </article>
 
-                <!-- Project 2: Contact Form -->
                 <article class="project-card" data-category="html">
                     <div class="project-image">
                         <img src="form.png" alt="Contact Form" loading="lazy">
                         <div class="project-overlay">
-                            <a href="#" class="project-link" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
+                            <a href="#" class="project-link" target="_blank"><i
+                                    class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                     <div class="project-content">
@@ -244,51 +208,37 @@
                         <p>Fully functional contact form with client-side validation, professional styling, and
                             responsive design using HTML5 and CSS3.</p>
                         <div class="project-tags">
-                            <span>HTML5</span>
-                            <span>CSS3</span>
-                            <span>Form Validation</span>
+                            <span>HTML5</span><span>CSS3</span><span>Form Validation</span>
                         </div>
                         <div class="project-links">
-                            <a href="https://yourusername.github.io/contact-form" target="_blank" class="link-demo">
-                                <i class="fas fa-eye"></i> Live Demo
-                            </a>
-                            <a href="https://github.com/yourusername/contact-form" target="_blank" class="link-github">
-                                <i class="fab fa-github"></i> GitHub
-                            </a>
+                            <a href="https://yourusername.github.io/contact-form" target="_blank" class="link-demo"><i
+                                    class="fas fa-eye"></i> Live Demo</a>
+                            <a href="https://github.com/yourusername/contact-form" target="_blank"
+                                class="link-github"><i class="fab fa-github"></i> GitHub</a>
                         </div>
                     </div>
                 </article>
 
-                <!-- Project 3: Anniversary Website -->
                 <article class="project-card" data-category="js">
                     <div class="project-image">
                         <img src="Anniversary.png" alt="Anniversary Website" loading="lazy">
                         <div class="project-overlay">
-                            <a href="#" class="project-link" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
+                            <a href="#" class="project-link" target="_blank"><i
+                                    class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                     <div class="project-content">
                         <h3>Anniversary Website</h3>
-                        <p>Interactive anniversary celebration site featuring countdown timer, smooth animations,
-                            music
+                        <p>Interactive anniversary celebration site featuring countdown timer, smooth animations, music
                             controls, and fully responsive design.</p>
                         <div class="project-tags">
-                            <span>HTML5</span>
-                            <span>CSS3</span>
-                            <span>JavaScript</span>
-                            <span>Animations</span>
+                            <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Animations</span>
                         </div>
                         <div class="project-links">
                             <a href="https://yourusername.github.io/anniversary-website" target="_blank"
-                                class="link-demo">
-                                <i class="fas fa-eye"></i> Live Demo
-                            </a>
+                                class="link-demo"><i class="fas fa-eye"></i> Live Demo</a>
                             <a href="https://github.com/yourusername/anniversary-website" target="_blank"
-                                class="link-github">
-                                <i class="fab fa-github"></i> GitHub
-                            </a>
+                                class="link-github"><i class="fab fa-github"></i> GitHub</a>
                         </div>
                     </div>
                 </article>
@@ -304,67 +254,66 @@
                 <div class="contact-info">
                     <h3>Let's Create Something Amazing Together!</h3>
                     <div class="contact-details">
-                        <p><i class="fas fa-envelope"></i> jeromequinto0106@gmail.com</p>
+                        <p><i class="fas fa-envelope"></i> <strong>jeromequinto0101@gmail.com</strong></p>
                     </div>
                     <div class="social-links">
-                        <a href="https://github.com/jeromequinto/jeromequinto.github.io-eportfolio"
-                            aria-label="GitHub"><i class="fab fa-github"></i></a>
-                        <a href="https://www.linkedin.com/in/jerome-quinto-5a7824336?utm_source=share_via&utm_content=profile&utm_medium=member_android"
-                            aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://github.com/jeromequinto" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/jerome-quinto-5a7824336" aria-label="LinkedIn"><i
+                                class="fab fa-linkedin"></i></a>
                         <a href="https://www.facebook.com/share/1FAeRwofRR/" aria-label="Facebook"><i
                                 class="fab fa-facebook"></i></a>
                     </div>
                 </div>
                 <form class="contact-form" id="contact-form">
                     <div class="form-group">
-                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        <input type="text" id="name" name="name" placeholder="Your Name *" required>
                         <span class="error" id="name-error"></span>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="email" name="email" placeholder="Your Email" required>
+                        <input type="email" id="email" name="email" placeholder="Your Email *" required>
                         <span class="error" id="email-error"></span>
                     </div>
                     <div class="form-group">
-                        <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+                        <textarea id="message" name="message" rows="5" placeholder="Your Message *" required></textarea>
                         <span class="error" id="message-error"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
+                    <button type="submit" id="submit-btn" class="btn btn-primary full-width">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                    <div id="form-status"></div>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- Resume Section -->
     <section id="resume" class="resume">
         <div class="container">
             <h2 class="section-heading">Resume</h2>
             <div class="resume-content">
                 <div class="resume-download">
-                    <a href="resume.pdf" class="btn btn-primary" download>
-                        <i class="fas fa-download"></i> Download Resume
-                    </a>
-                </div>
-                <div class="resume-preview">
-                    <div class="resume-section">
-                        <h3><i class="fas fa-graduation-cap"></i> Education</h3>
-                        <div class="resume-item">
-                            <h4>Web Programming Essentials</h4>
-                            <p>STI College | Expected 2024</p>
-                        </div>
-                    </div>
-                    <div class="resume-section">
-                        <h3><i class="fas fa-briefcase"></i> Experience</h3>
-                        <div class="resume-item">
-                            <h4>Freelance Web Developer</h4>
-                            <p>2023 - Present | Creating responsive websites and web applications</p>
-                        </div>
+                    <div class="resume-label-box">
+                        <i class="fas fa-file-alt resume-icon"></i>
+                        <h3 class="resume-label-title">My Resume</h3>
+                        <p class="resume-label-sub">Click the button below to download a copy of my latest resume in PDF
+                            format.</p>
+                        <a href="resume.pdf" class="btn btn-primary" download>
+                            <i class="fas fa-download"></i> Download My Resume
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <br>
+        </div>
+    </footer>
+
     <!-- Back to Top Button -->
-    <button class="scroll-top" id="scroll-top">
+    <button class="scroll-top" id="scroll-top" aria-label="Back to top">
         <i class="fas fa-chevron-up"></i>
     </button>
 
