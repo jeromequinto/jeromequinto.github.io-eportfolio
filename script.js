@@ -1,4 +1,6 @@
-// DOM Elements
+// =============================================
+// DOM ELEMENTS
+// =============================================
 const navMenu = document.getElementById('nav-menu');
 const hamburger = document.getElementById('hamburger');
 const navbar = document.getElementById('navbar');
@@ -9,164 +11,198 @@ const typewriterEl = document.getElementById('typewriter');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const projectCards = document.querySelectorAll('.project-card');
 const themeToggle = document.getElementById('theme-toggle');
+const profileImg = document.querySelector('.profile-img');
 
-// 🌙 DARK MODE - CLOUDFLARE WORKERS FIXED VERSION
+// =============================================
+// INIT ON DOM READY
+// =============================================
 document.addEventListener('DOMContentLoaded', function () {
-    // Check saved theme or default to light
-    const savedTheme = localStorage.getItem('theme') || 'light';
 
-    // Apply theme
+    // --- Theme: restore saved preference ---
+    const savedTheme = localStorage.getItem('theme') || 'light';
     if (savedTheme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
         themeToggle?.classList.add('active');
     }
 
-    // Theme toggle click handler
+    // --- Theme toggle click ---
+    // ✅ FIX: We no longer touch navbar.style.background here.
+    // The navbar background is fully controlled by CSS variables +
+    // the .scrolled class, so it updates instantly on theme change
+    // without waiting for the next scroll event.
     themeToggle?.addEventListener('click', function () {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         const newTheme = isDark ? 'light' : 'dark';
 
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-
-        // Toggle active class for animation
         themeToggle.classList.toggle('active');
+        // No navbar.style.background override needed — CSS handles it instantly
     });
+
+    // --- Footer year ---
+    const yearEl = document.getElementById('footer-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // --- Start features ---
+    typeWriter();
+    animateSkillBars();
+    initProfileFloat();
 });
 
-// 🎭 ENHANCED NAVIGATION SMOOTH SCROLL WITH ANIMATION
+// =============================================
+// PROFILE IMAGE — SMOOTH FLOAT ONLY
+// =============================================
+function initProfileFloat() {
+    if (!profileImg) return;
+
+    profileImg.addEventListener('mouseenter', () => {
+        profileImg.style.animationPlayState = 'paused';
+    });
+
+    profileImg.addEventListener('mouseleave', () => {
+        profileImg.style.animationPlayState = 'running';
+    });
+}
+
+// =============================================
+// HAMBURGER MENU
+// =============================================
+hamburger.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    hamburger.classList.toggle('active');
+});
+
+// =============================================
+// RIPPLE EFFECT — theme-aware
+// White splash in dark mode, gray splash in light mode
+// =============================================
+function createRipple(e, element) {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const rippleColor = isDark
+        ? 'rgba(255, 255, 255, 0.55)'
+        : 'rgba(100, 100, 100, 0.22)';
+
+    const ripple = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height) * 2.5;
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+
+    ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        background: ${rippleColor};
+        border-radius: 50%;
+        transform: scale(0);
+        animation: navRipple 0.6s ease-out forwards;
+        pointer-events: none;
+        z-index: 0;
+    `;
+
+    if (!document.getElementById('ripple-keyframes')) {
+        const style = document.createElement('style');
+        style.id = 'ripple-keyframes';
+        style.textContent = `
+            @keyframes navRipple {
+                to { transform: scale(1); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    element.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 620);
+}
+
+// =============================================
+// NAV LINKS — SMOOTH SCROLL + RIPPLE
+// =============================================
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
+
+        // 💥 Theme-aware splash on click
+        createRipple(e, link);
+
         const targetId = link.getAttribute('href');
         const targetSection = document.querySelector(targetId);
+
         if (targetSection) {
             const targetPosition = targetSection.offsetTop - 80;
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
 
-            // Add ripple effect
-            createRipple(e.currentTarget);
-
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-
-            // Active state
             navLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
 
-            // Close mobile menu
             navMenu.classList.remove('active');
             hamburger.classList.remove('active');
         }
     });
 });
 
-// Ripple effect function
-function createRipple(element) {
-    const ripple = document.createElement('span');
-    const rect = element.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    const x = event.clientX - rect.left - size / 2;
-    const y = event.clientY - rect.top - size / 2;
-
-    ripple.style.width = ripple.style.height = size + 'px';
-    ripple.style.left = x + 'px';
-    ripple.style.top = y + 'px';
-    ripple.classList.add('ripple');
-
-    const rippleCSS = `
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.6);
-            transform: scale(0);
-            animation: ripple-animation 0.6s linear;
-            pointer-events: none;
-        }
-        @keyframes ripple-animation {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-    `;
-
-    if (!document.querySelector('#ripple-styles')) {
-        const style = document.createElement('style');
-        style.id = 'ripple-styles';
-        style.textContent = rippleCSS;
-        document.head.appendChild(style);
-    }
-
-    element.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 600);
-}
-
-// Mobile Navigation Toggle
-hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    hamburger.classList.toggle('active');
-});
-
-// Close mobile menu when clicking on a link
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        hamburger.classList.remove('active');
-    });
-});
-
-// Navbar background on scroll - FIXED FOR DARK MODE
+// =============================================
+// SCROLL HANDLER
+// ✅ FIX: Use navbar.classList (adds/removes .scrolled)
+// instead of navbar.style.background (inline style).
+//
+// Inline styles override CSS and don't react to [data-theme]
+// changes until the next scroll fires — that was the delay bug.
+// Now the background is defined entirely in CSS using
+// var(--navbar-bg) and var(--navbar-bg-scrolled), which switch
+// instantly when data-theme changes on <html>.
+// =============================================
 window.addEventListener('scroll', () => {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
+    // Navbar scroll state
     if (window.scrollY > 50) {
-        navbar.style.background = isDark ? 'rgba(15, 15, 35, 0.98)' : 'rgba(255, 255, 255, 0.98)';
-        navbar.style.backdropFilter = 'blur(20px)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+        navbar.classList.add('scrolled');
     } else {
-        navbar.style.background = isDark ? 'rgba(15, 15, 35, 0.95)' : 'rgba(255, 255, 255, 0.95)';
-        navbar.style.backdropFilter = 'blur(20px)';
-        navbar.style.boxShadow = 'none';
+        navbar.classList.remove('scrolled');
     }
 
-    // Show/hide scroll top button
+    // Scroll-to-top button
     if (window.scrollY > 300) {
         scrollTopBtn.classList.add('show');
     } else {
         scrollTopBtn.classList.remove('show');
     }
-});
 
-// Smooth scrolling for navigation links
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetId = link.getAttribute('href');
-        const targetSection = document.querySelector(targetId);
-        if (targetSection) {
-            const targetPosition = targetSection.offsetTop - 80;
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-            navLinks.forEach(l => l.classList.remove('active'));
+    // Active nav link on scroll
+    let current = '';
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop - 120;
+        if (window.scrollY >= sectionTop) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
             link.classList.add('active');
         }
     });
+
+    // Skill bars
+    animateSkillBars();
 });
 
-// Scroll Top Button
+// =============================================
+// SCROLL TOP BUTTON
+// =============================================
 scrollTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// Typewriter Effect
-const texts = ['Web Developer', 'Enjoying Coding', 'Creative Coder'];
+// =============================================
+// TYPEWRITER EFFECT
+// =============================================
+const texts = ['Web Developer', 'Creative Coder', 'Problem Solver'];
 let textIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
@@ -188,11 +224,13 @@ function typeWriter() {
         if (!isDeleting) {
             textIndex = (textIndex + 1) % texts.length;
         }
-        setTimeout(typeWriter, isDeleting ? 500 : 1000);
+        setTimeout(typeWriter, isDeleting ? 500 : 1200);
     }
 }
 
-// FIXED PROJECT FILTER
+// =============================================
+// PROJECT FILTER
+// =============================================
 filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         filterBtns.forEach(b => b.classList.remove('active'));
@@ -201,98 +239,100 @@ filterBtns.forEach(btn => {
         const filterValue = btn.getAttribute('data-filter');
 
         projectCards.forEach(card => {
-            if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
+            const match = filterValue === 'all' || card.getAttribute('data-category') === filterValue;
+            if (match) {
                 card.style.display = 'block';
+                // Small delay lets display:block take effect before animating
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 20);
             } else {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(30px)';
-                setTimeout(() => {
-                    card.style.display = 'none';
-                }, 300);
+                setTimeout(() => { card.style.display = 'none'; }, 300);
             }
         });
     });
 });
 
-// Skill Bar Animation
+// =============================================
+// SKILL BAR ANIMATION
+// =============================================
 const skillBars = document.querySelectorAll('.skill-progress');
 
 function animateSkillBars() {
     skillBars.forEach(bar => {
-        const barPosition = bar.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-        if (barPosition < windowHeight - 100) {
-            const width = bar.getAttribute('data-width');
-            bar.style.width = width + '%';
+        const barTop = bar.getBoundingClientRect().top;
+        if (barTop < window.innerHeight - 80) {
+            const targetWidth = bar.getAttribute('data-width');
+            if (bar.style.width !== targetWidth + '%') {
+                bar.style.width = targetWidth + '%';
+            }
         }
     });
 }
 
-// Intersection Observer
+// =============================================
+// INTERSECTION OBSERVER — PROJECT CARDS
+// =============================================
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
+            // Stagger card animations
+            setTimeout(() => {
+                entry.target.classList.add('animate');
+            }, i * 100);
         }
     });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
 projectCards.forEach(card => observer.observe(card));
-document.querySelectorAll('section').forEach(section => observer.observe(section));
 
-// Contact Form Validation
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const message = document.getElementById('message').value.trim();
-    let isValid = true;
+// =============================================
+// EMAILJS — CONTACT FORM
+// =============================================
+document.addEventListener('DOMContentLoaded', function () {
+    emailjs.init("3T-CFdzAAV41-s2BS");
 
-    document.querySelectorAll('.error').forEach(error => error.textContent = '');
+    const form = document.getElementById('contact-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const status = document.getElementById('form-status');
 
-    if (name.length < 2) {
-        document.getElementById('name-error').textContent = 'Name must be at least 2 characters';
-        isValid = false;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        document.getElementById('email-error').textContent = 'Please enter a valid email';
-        isValid = false;
-    }
-    if (message.length < 10) {
-        document.getElementById('message-error').textContent = 'Message must be at least 10 characters';
-        isValid = false;
-    }
+    form?.addEventListener('submit', function (e) {
+        e.preventDefault();
 
-    if (isValid) {
-        alert('Thank you for your message! I\'ll get back to you soon.');
-        contactForm.reset();
-    }
-});
+        const SERVICE_ID = "service_yy1z2zg";
+        const TEMPLATE_ID = "__ejs-test-mail-service__";
 
-// Navbar active link on scroll & skill bars
-window.addEventListener('scroll', () => {
-    let current = '';
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100;
-        if (window.scrollY >= sectionTop) {
-            current = section.getAttribute('id');
+        // Basic validation
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        if (!name || !email || !message) {
+            status.innerHTML = '<p style="color:#ef4444;">Please fill in all fields.</p>';
+            return;
         }
-    });
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
-    });
-    animateSkillBars();
-});
 
-// Initialize on load
-window.addEventListener('load', () => {
-    typeWriter();
-    animateSkillBars();
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
+
+        emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+            from_name: name,
+            from_email: email,
+            message: message,
+            to_email: "jeromequinto0101@gmail.com"
+        }).then(function () {
+            status.innerHTML = '<p style="color:#22c55e;margin-top:1rem;">✅ Message sent successfully!</p>';
+            form.reset();
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+        }, function (error) {
+            console.error('EmailJS error:', error);
+            status.innerHTML = '<p style="color:#ef4444;margin-top:1rem;">❌ Failed to send. Please try again.</p>';
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+        });
+    });
 });
