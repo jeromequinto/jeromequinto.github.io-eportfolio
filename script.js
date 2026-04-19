@@ -292,47 +292,41 @@ projectCards.forEach(card => observer.observe(card));
 // =============================================
 // EMAILJS — CONTACT FORM
 // =============================================
-document.addEventListener('DOMContentLoaded', function () {
-    emailjs.init("3T-CFdzAAV41-s2BS");
+const form = document.getElementById('contact-form');
+const status = document.getElementById('form-status');
+const submitBtn = document.getElementById('submit-btn');
 
-    const form = document.getElementById('contact-form');
-    const submitBtn = document.getElementById('submit-btn');
-    const status = document.getElementById('form-status');
+form.addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-    form?.addEventListener('submit', function (e) {
-        e.preventDefault();
+    const data = new FormData(form);
 
-        const SERVICE_ID = "service_yy1z2zg";
-        const TEMPLATE_ID = "__ejs-test-mail-service__";
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
-        // Basic validation
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const message = document.getElementById('message').value.trim();
+    try {
+        const response = await fetch(form.action, {
+            method: form.method,
+            body: data,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
 
-        if (!name || !email || !message) {
-            status.innerHTML = '<p style="color:#ef4444;">Please fill in all fields.</p>';
-            return;
+        if (response.ok) {
+            status.innerHTML = '✅ Message sent successfully!';
+            status.style.color = '#22c55e';
+            form.reset();
+        } else {
+            status.innerHTML = '❌ Failed to send. Try again.';
+            status.style.color = '#ef4444';
         }
 
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
+    } catch (error) {
+        status.innerHTML = '❌ Network error. Try again.';
+        status.style.color = '#ef4444';
+    }
 
-        emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-            from_name: name,
-            from_email: email,
-            message: message,
-            to_email: "jeromequinto0101@gmail.com"
-        }).then(function () {
-            status.innerHTML = '<p style="color:#22c55e;margin-top:1rem;">✅ Message sent successfully!</p>';
-            form.reset();
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
-        }, function (error) {
-            console.error('EmailJS error:', error);
-            status.innerHTML = '<p style="color:#ef4444;margin-top:1rem;">❌ Failed to send. Please try again.</p>';
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
-        });
-    });
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
 });
