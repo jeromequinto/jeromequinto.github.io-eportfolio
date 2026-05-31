@@ -6,7 +6,6 @@ const hamburger = document.getElementById('hamburger');
 const navbar = document.getElementById('navbar');
 const navLinks = document.querySelectorAll('.nav-link');
 const scrollTopBtn = document.getElementById('scroll-top');
-const contactForm = document.getElementById('contact-form');
 const typewriterEl = document.getElementById('typewriter');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const projectCards = document.querySelectorAll('.project-card');
@@ -18,36 +17,31 @@ const profileImg = document.querySelector('.profile-img');
 // =============================================
 document.addEventListener('DOMContentLoaded', function () {
 
-    // --- Theme: restore saved preference ---
+    // Restore saved theme
     const savedTheme = localStorage.getItem('theme') || 'light';
     if (savedTheme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
         themeToggle?.classList.add('active');
     }
 
-    // --- Theme toggle click ---
-    // ✅ FIX: We no longer touch navbar.style.background here.
-    // The navbar background is fully controlled by CSS variables +
-    // the .scrolled class, so it updates instantly on theme change
-    // without waiting for the next scroll event.
+    // Theme toggle click
     themeToggle?.addEventListener('click', function () {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         const newTheme = isDark ? 'light' : 'dark';
-
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         themeToggle.classList.toggle('active');
-        // No navbar.style.background override needed — CSS handles it instantly
     });
 
-    // --- Footer year ---
+    // Footer year
     const yearEl = document.getElementById('footer-year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-    // --- Start features ---
+    // Start features
     typeWriter();
     animateSkillBars();
     initProfileFloat();
+    initContactForm();
 });
 
 // =============================================
@@ -55,11 +49,9 @@ document.addEventListener('DOMContentLoaded', function () {
 // =============================================
 function initProfileFloat() {
     if (!profileImg) return;
-
     profileImg.addEventListener('mouseenter', () => {
         profileImg.style.animationPlayState = 'paused';
     });
-
     profileImg.addEventListener('mouseleave', () => {
         profileImg.style.animationPlayState = 'running';
     });
@@ -74,8 +66,7 @@ hamburger.addEventListener('click', () => {
 });
 
 // =============================================
-// RIPPLE EFFECT — theme-aware
-// White splash in dark mode, gray splash in light mode
+// RIPPLE EFFECT
 // =============================================
 function createRipple(e, element) {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -106,11 +97,7 @@ function createRipple(e, element) {
     if (!document.getElementById('ripple-keyframes')) {
         const style = document.createElement('style');
         style.id = 'ripple-keyframes';
-        style.textContent = `
-            @keyframes navRipple {
-                to { transform: scale(1); opacity: 0; }
-            }
-        `;
+        style.textContent = `@keyframes navRipple { to { transform: scale(1); opacity: 0; } }`;
         document.head.appendChild(style);
     }
 
@@ -124,8 +111,6 @@ function createRipple(e, element) {
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-
-        // 💥 Theme-aware splash on click
         createRipple(e, link);
 
         const targetId = link.getAttribute('href');
@@ -146,14 +131,6 @@ navLinks.forEach(link => {
 
 // =============================================
 // SCROLL HANDLER
-// ✅ FIX: Use navbar.classList (adds/removes .scrolled)
-// instead of navbar.style.background (inline style).
-//
-// Inline styles override CSS and don't react to [data-theme]
-// changes until the next scroll fires — that was the delay bug.
-// Now the background is defined entirely in CSS using
-// var(--navbar-bg) and var(--navbar-bg-scrolled), which switch
-// instantly when data-theme changes on <html>.
 // =============================================
 window.addEventListener('scroll', () => {
 
@@ -188,7 +165,7 @@ window.addEventListener('scroll', () => {
         }
     });
 
-    // Skill bars
+    // Skill bars (kept for any legacy bar elements)
     animateSkillBars();
 });
 
@@ -242,7 +219,6 @@ filterBtns.forEach(btn => {
             const match = filterValue === 'all' || card.getAttribute('data-category') === filterValue;
             if (match) {
                 card.style.display = 'block';
-                // Small delay lets display:block take effect before animating
                 setTimeout(() => {
                     card.style.opacity = '1';
                     card.style.transform = 'translateY(0)';
@@ -257,7 +233,7 @@ filterBtns.forEach(btn => {
 });
 
 // =============================================
-// SKILL BAR ANIMATION
+// SKILL BAR ANIMATION (legacy support)
 // =============================================
 const skillBars = document.querySelectorAll('.skill-progress');
 
@@ -279,7 +255,6 @@ function animateSkillBars() {
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
-            // Stagger card animations
             setTimeout(() => {
                 entry.target.classList.add('animate');
             }, i * 100);
@@ -290,43 +265,59 @@ const observer = new IntersectionObserver((entries) => {
 projectCards.forEach(card => observer.observe(card));
 
 // =============================================
-// EMAILJS — CONTACT FORM
+// CONTACT FORM — uses class selector, no ID needed
 // =============================================
-const form = document.getElementById('contact-form');
-const status = document.getElementById('form-status');
-const submitBtn = document.getElementById('submit-btn');
+function initContactForm() {
+    const form = document.querySelector('.contact-form');
+    if (!form) return; // safety guard — won't crash if form is missing
 
-form.addEventListener('submit', async function (e) {
-    e.preventDefault();
+    // Add a status element dynamically if it doesn't exist
+    let status = document.getElementById('form-status');
+    if (!status) {
+        status = document.createElement('p');
+        status.id = 'form-status';
+        status.style.marginTop = '1rem';
+        status.style.fontSize = '0.9rem';
+        form.appendChild(status);
+    }
 
-    const data = new FormData(form);
+    // Find the submit button inside the form
+    const submitBtn = form.querySelector('button[type="submit"]');
 
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
 
-    try {
-        const response = await fetch(form.action, {
-            method: form.method,
-            body: data,
-            headers: {
-                'Accept': 'application/json'
+        const data = new FormData(form);
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        }
+
+        try {
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: data,
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                status.innerHTML = '✅ Message sent successfully!';
+                status.style.color = '#22c55e';
+                form.reset();
+            } else {
+                status.innerHTML = '❌ Failed to send. Try again.';
+                status.style.color = '#ef4444';
             }
-        });
 
-        if (response.ok) {
-            status.innerHTML = '✅ Message sent successfully!';
-            status.style.color = '#22c55e';
-            form.reset();
-        } else {
-            status.innerHTML = '❌ Failed to send. Try again.';
+        } catch (error) {
+            status.innerHTML = '❌ Network error. Try again.';
             status.style.color = '#ef4444';
         }
 
-    } catch (error) {
-        status.innerHTML = '❌ Network error. Try again.';
-        status.style.color = '#ef4444';
-    }
-
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
-});
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+        }
+    });
+}
